@@ -6,5 +6,6 @@
   "ds-overhaul-references": null,
   "ds-payload-type-hooks": null,
   "ds-check-should-serialize-relationships": null,
-  "ds-reset-attribute": null
+  "ds-reset-attribute": null,
+  "ds-better-adapter-populated-record-array-error-messages": null
 }

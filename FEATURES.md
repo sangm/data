@@ -134,3 +134,10 @@ entry in `config/features.json`.
     tom.resetAttribute('lastName')  // { firstName: 'Tom', lastName: 'Dale' }
     tom.get('hasDirtyAttributes')   // false
   ```
+
+- `ds-better-adapter-populated-record-array-error-messages`
+
+  The result returned from `store.query` is an
+  AdapterPopulatedRecordArray. This adds better error messages when you
+  try to mutate the array, as it is considered immutable and the
+  mutation methods should not be used.
