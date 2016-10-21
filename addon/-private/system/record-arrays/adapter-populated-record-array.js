@@ -69,13 +69,26 @@ export default RecordArray.extend({
   },
 
   /**
-    @method loadRecords
+    @method _setInternalModels
     @param {Array} internalModels
     @param {Object} payload normalized payload
     @private
   */
-  loadRecords(internalModels, payload) {
-    let token = heimdall.start('AdapterPopulatedRecordArray.loadRecords');
+  _setInternalModels(internalModels, payload) {
+    let token = heimdall.start('AdapterPopulatedRecordArray._setInternalModels');
+    let operations = {};
+
+    this.get('content').forEach(internalModel => {
+      operations[internalModel.id] = { type: 'remove', internalModel };
+    });
+
+    internalModels.forEach(internalModel => {
+      if (operations[internalModel.id]) {
+        operations[internalModel.id].type = 'remain';
+      } else {
+        operations[internalModel.id] = { type: 'add', internalModel };
+      }
+    });
 
       // TODO: initial load should not cause change events at all, only
     // subsequent. This requires changing the public api of adapter.query, but
@@ -89,8 +102,14 @@ export default RecordArray.extend({
       links: cloneNull(payload.links)
     });
 
-    internalModels.forEach(record => {
-      this.manager.recordArraysForRecord(record).add(this);
+    Object.keys(operations).forEach(id => {
+      let operation = operations[id];
+      let recordArraysSet = this.manager.recordArraysForRecord(operation.internalModel);
+
+      switch (operation.type) {
+        case 'remove': { recordArraysSet.delete(this); break; }
+        case 'add':    { recordArraysSet.add(this);    break; }
+      }
     });
 
     // TODO: should triggering didLoad event be the last action of the runLoop?
