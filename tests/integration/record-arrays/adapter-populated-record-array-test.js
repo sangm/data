@@ -74,7 +74,7 @@ test('when a record is deleted in an adapter populated record array, it should b
 
 test('stores the metadata off the payload', function(assert) {
   let recordArray = store.recordArrayManager
-    .createAdapterPopulatedRecordArray(store.modelFor('person'), null);
+    .createAdapterPopulatedRecordArray(Person, null);
 
   let payload = {
     data: [
@@ -164,15 +164,15 @@ test('recordArray.replace() throws error', function(assert) {
 function assertRecordHasRecordArray(assert, record, recordArray) {
   if (!assert) { throw TypeError('assertRecordHasRecordArray first argument must be QUnit\'s assert'); }
   if (!record) { throw TypeError('assertRecordHasRecordArray second argument must be a record'); }
-  if (!assert) { throw TypeError('assertRecordHasRecordArray third argument must be a recordArray'); }
+  if (!recordArray) { throw TypeError('assertRecordHasRecordArray third argument must be a recordArray'); }
 
   assert.ok(recordArray.manager.recordArraysForRecord(record._internalModel).has(recordArray), `record '${record}' should have reference to its record array`);
 }
 
-function assertRecordDoesNOTRecordArray(assert, record, recordArray) {
-  if (!assert) { throw TypeError('assertRecordHasRecordArray first argument must be QUnit\'s assert'); }
-  if (!record) { throw TypeError('assertRecordHasRecordArray second argument must be a record'); }
-  if (!assert) { throw TypeError('assertRecordHasRecordArray third argument must be a recordArray'); }
+function assertRecordDoesNOTHaveRecordArray(assert, record, recordArray) {
+  if (!assert) { throw TypeError('assertRecordoesNOThaveRecordArray first argument must be QUnit\'s assert'); }
+  if (!record) { throw TypeError('assertRecordoesNOThaveRecordArray second argument must be a record'); }
+  if (!recordArray) { throw TypeError('assertRecordoesNOThaveRecordArray third argument must be a recordArray'); }
 
   assert.ok(!recordArray.manager.recordArraysForRecord(record._internalModel).has(recordArray), `record '${record}' should NOT have reference to their record array`);
 }
@@ -211,7 +211,7 @@ test('loadRecord re-syncs internalModels recordArrays', function(assert) {
       penner = recordArray.findBy('id', '3');
 
       assertRecordHasRecordArray(assert, dale, recordArray);
-      assertRecordDoesNOTRecordArray(assert, katz, recordArray);
+      assertRecordDoesNOTHaveRecordArray(assert, katz, recordArray);
       assertRecordHasRecordArray(assert, penner, recordArray);
 
       assert.deepEqual(recordArray.getEach('name'), ['Scumbag Dale', 'Scumbag Penner']);
